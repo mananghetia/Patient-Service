@@ -1,3 +1,14 @@
+
+# Patient Service Management
+
+- Architected a microservices-based patient management system using Java Spring Boot, breaking functionality into independent services (e.g. patient, billing) with clear REST APIs and Spring Cloud infrastructure. This design delivered granular scaling and enhanced maintainability (each service can be deployed or scaled independently), a best practice for complex, high-growth systems in finance or e-commerce. (Tech: Spring Boot, Spring Cloud; Impact: horizontal scaling and faster dev/test cycles via smaller codebases.
+  
+- Containerized and deployed services on AWS (using Docker and Fargate/EKS) to ensure robust, auto-scalable infrastructure. By leveraging AWS multi-AZ deployment with load balancing and serverless containers, the system achieved targeted < 200 ms API response times and ~99.95% uptime. (Tech: Docker, AWS Fargate/EKS, CloudFront; Impact: autoscaling supports spikes in traffic with minimal latency).
+  
+- Integrated event-driven data processing with Apache Kafka (and gRPC) to synchronize patient and billing data in real time. This data-driven pipeline ensures reliable, asynchronous communication between services, enabling real-time updates and analytics. Kafka’s proven healthcare use (e.g. streaming patient records) boosts efficiency and responsiveness). (Tech: Kafka, gRPC, PostgreSQL; Impact: real-time data flow and processing across services).
+  
+- Developed a responsive web frontend using React and Tailwind CSS, with reusable component design to enforce a consistent, maintainable UI. Employed OAuth2 security via Keycloak for enterprise-grade authentication. The React component approach promotes clean, DRY code (reducing redundancy) and consistent UX. (Tech: React, Tailwind CSS, Keycloak; Impact: fast, consistent UI development and robust security.)
+
 # Patient Service
 
 ---
