@@ -1,410 +1,57 @@
+# Patient Management System with Microservices
 
-# Patient Management Service 
+**Presentation** : https://docs.google.com/presentation/d/1hJnGUnJCl5XHOlE1zWKqN73RZLYFykjIk3cXywc13g4/edit?usp=drive_link
 
-- Architected a microservices-based patient management system using Java Spring Boot, breaking functionality into independent services (e.g. patient, billing) with clear REST APIs and Spring Cloud infrastructure. This design delivered granular scaling and enhanced maintainability (each service can be deployed or scaled independently), a best practice for complex, high-growth systems in finance or e-commerce.(Tech: Spring Boot, Spring Cloud; Impact: horizontal scaling and faster dev/test cycles via smaller codebase.)
-  
-- Containerized and deployed services on AWS (using Docker and Fargate/EKS) to ensure robust, auto-scalable infrastructure. By leveraging AWS multi-AZ deployment with load balancing and serverless containers, the system achieved targeted < 200 ms API response times and ~99.95% uptime.
-(Tech: Docker, AWS Fargate/EKS, CloudFront; Impact: autoscaling supports spikes in traffic with minimal latency.)
-  
-- Integrated event-driven data processing with Apache Kafka (and gRPC) to synchronize patient and billing data in real time. This data-driven pipeline ensures reliable, asynchronous communication between services, enabling real-time updates and analytics. Kafka’s proven healthcare use (e.g. streaming patient records) boosts efficiency and responsiveness).
-(Tech: Kafka, gRPC, PostgreSQL; Impact: real-time data flow and processing across services.)
-  
-- Developed a responsive web frontend using React and Tailwind CSS, with reusable component design to enforce a consistent, maintainable UI. Employed OAuth2 security via Keycloak for enterprise-grade authentication. The React component approach promotes clean, DRY code (reducing redundancy) and consistent UX.
-(Tech: React, Tailwind CSS, Keycloak; Impact: fast, consistent UI development and robust security.)
-
-# Patient Service
-
----
-
-## Environment Variables
-
-```
-JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005;
-SPRING_DATASOURCE_PASSWORD=password;
-SPRING_DATASOURCE_URL=jdbc:postgresql://patient-service-db:5432/db;
-SPRING_DATASOURCE_USERNAME=admin_user;
-SPRING_JPA_HIBERNATE_DDL_AUTO=update;
-SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092;
-SPRING_SQL_INIT_MODE=always
-```
-
-# Billing Service
-
----
-
-## gRPC Setup
-
-Add the following to the `<dependencies>` section
-```
-<!--GRPC -->
-<dependency>
-    <groupId>io.grpc</groupId>
-    <artifactId>grpc-netty-shaded</artifactId>
-    <version>1.69.0</version>
-</dependency>
-<dependency>
-    <groupId>io.grpc</groupId>
-    <artifactId>grpc-protobuf</artifactId>
-    <version>1.69.0</version>
-</dependency>
-<dependency>
-    <groupId>io.grpc</groupId>
-    <artifactId>grpc-stub</artifactId>
-    <version>1.69.0</version>
-</dependency>
-<dependency> <!-- necessary for Java 9+ -->
-    <groupId>org.apache.tomcat</groupId>
-    <artifactId>annotations-api</artifactId>
-    <version>6.0.53</version>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>net.devh</groupId>
-    <artifactId>grpc-spring-boot-starter</artifactId>
-    <version>3.1.0.RELEASE</version>
-</dependency>
-<dependency>
-    <groupId>com.google.protobuf</groupId>
-    <artifactId>protobuf-java</artifactId>
-    <version>4.29.1</version>
-</dependency>
-
-```
-
-Replace the `<build>` section with the following
-
-```
-
-<build>
-    <extensions>
-        <!-- Ensure OS compatibility for protoc -->
-        <extension>
-            <groupId>kr.motd.maven</groupId>
-            <artifactId>os-maven-plugin</artifactId>
-            <version>1.7.0</version>
-        </extension>
-    </extensions>
-    <plugins>
-        <!-- Spring boot / maven  -->
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
-
-        <!-- PROTO -->
-        <plugin>
-            <groupId>org.xolstice.maven.plugins</groupId>
-            <artifactId>protobuf-maven-plugin</artifactId>
-            <version>0.6.1</version>
-            <configuration>
-                <protocArtifact>com.google.protobuf:protoc:3.25.5:exe:${os.detected.classifier}</protocArtifact>
-                <pluginId>grpc-java</pluginId>
-                <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.68.1:exe:${os.detected.classifier}</pluginArtifact>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>compile</goal>
-                        <goal>compile-custom</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
-
-```
-
-# Patient Service
-
----
-
-## Environment Variables (complete list)
-```bash
-BILLING_SERVICE_ADDRESS=billing-service;
-BILLING_SERVICE_GRPC_PORT=9005;
-JAVA_TOOL_OPTIONS=-agentlib:jdwp\=transport\=dt_socket,server\=y,suspend\=n,address\=*:5005;
-SPRING_DATASOURCE_PASSWORD=password;
-SPRING_DATASOURCE_URL=jdbc:postgresql://patient-service-db:5432/db;
-SPRING_DATASOURCE_USERNAME=admin_user;
-SPRING_JPA_HIBERNATE_DDL_AUTO=update;
-SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092;
-SPRING_SQL_INIT_MODE=always
-```
+**Demo Video** : https://drive.google.com/file/d/1nZukgCNBzn-q8UY_qNyJYiKDMAVxPceV/view?usp=sharing
 
 
-## gRPC Setup
+This project features a **real-world, enterprise-level patient management system** built with production-ready **microservices**. It provides hands-on experience in **Java Spring Boot, Docker, and AWS cloud deployment**, including Infrastructure as Code.
 
-Add the following to the `<dependencies>` section
-```
-<!--GRPC -->
-<dependency>
-    <groupId>io.grpc</groupId>
-    <artifactId>grpc-netty-shaded</artifactId>
-    <version>1.69.0</version>
-</dependency>
-<dependency>
-    <groupId>io.grpc</groupId>
-    <artifactId>grpc-protobuf</artifactId>
-    <version>1.69.0</version>
-</dependency>
-<dependency>
-    <groupId>io.grpc</groupId>
-    <artifactId>grpc-stub</artifactId>
-    <version>1.69.0</version>
-</dependency>
-<dependency> <!-- necessary for Java 9+ -->
-    <groupId>org.apache.tomcat</groupId>
-    <artifactId>annotations-api</artifactId>
-    <version>6.0.53</version>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>net.devh</groupId>
-    <artifactId>grpc-spring-boot-starter</artifactId>
-    <version>3.1.0.RELEASE</version>
-</dependency>
-<dependency>
-    <groupId>com.google.protobuf</groupId>
-    <artifactId>protobuf-java</artifactId>
-    <version>4.29.1</version>
-</dependency>
+## Project Description
 
-```
+The system offers a complete, **end-to-end understanding** of modern enterprise technologies, building features module by module. It simulates **full cloud deployment** on AWS, locally using localstack.
 
-Replace the `<build>` section with the following
+## Features
 
-```
+*   **Microservices Architecture:** Production-ready microservices using Java Spring Boot and Docker.
+*   **Data Storage:** Uses **PostgreSQL** for data persistence and **H2 in-memory database** for local development.
+*   **Inter-service Communication:** Implements **REST** and **gRPC** for efficient microservice interaction, and **Apache Kafka** for event-driven communication.
+*   **API Gateway:** Built with **Spring Cloud Gateway** for request routing, load balancing, and handling cross-cutting concerns like security.
+*   **Security:** Features **user authentication** and **API security** using a dedicated Auth Service with **JWT Bearer tokens**.
+*   **Deployment Simulation:** Leverages **LocalStack** to simulate AWS infrastructure locally, using **Infrastructure as Code (IaC)** with AWS Cloud Development Kit (CDK) in Java.
+*   **Automated Testing:** Includes **automated integration tests** to ensure reliability.
+*   **API Documentation:** Generates **OpenAPI/Swagger UI** documentation for APIs.
 
-<build>
-    <extensions>
-        <!-- Ensure OS compatibility for protoc -->
-        <extension>
-            <groupId>kr.motd.maven</groupId>
-            <artifactId>os-maven-plugin</artifactId>
-            <version>1.7.0</version>
-        </extension>
-    </extensions>
-    <plugins>
-        <!-- Spring boot / maven  -->
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
+## Technologies Used
 
-        <!-- PROTO -->
-        <plugin>
-            <groupId>org.xolstice.maven.plugins</groupId>
-            <artifactId>protobuf-maven-plugin</artifactId>
-            <version>0.6.1</version>
-            <configuration>
-                <protocArtifact>com.google.protobuf:protoc:3.25.5:exe:${os.detected.classifier}</protocArtifact>
-                <pluginId>grpc-java</pluginId>
-                <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.68.1:exe:${os.detected.classifier}</pluginArtifact>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>compile</goal>
-                        <goal>compile-custom</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
+*   **Backend:** Java, Spring Boot
+*   **Containerization:** Docker
+*   **Data Stores:** PostgreSQL, H2 Database
+*   **Messaging:** Apache Kafka
+*   **API Gateway:** Spring Cloud Gateway
+*   **Communication:** REST, gRPC (with Protocol Buffers)
+*   **Security:** Spring Security, JSON Web Tokens (JWT)
+*   **Cloud Simulation:** LocalStack
+*   **Infrastructure as Code:** AWS Cloud Development Kit (CDK) in Java, AWS CloudFormation
+*   **Simulated AWS Services:** VPC, ECS (Fargate), RDS, MSK, ALB
+*   **Development Tools:** IntelliJ IDEA Ultimate, Maven, Git
+*   **Testing:** Rest Assured, JUnit Jupiter
 
-```
+## Prerequisites
 
-## Kafka Container
+*   **Basic Knowledge:** Java (variables, loops, classes, methods, OOP), Spring Boot, REST APIs, database concepts. Knowledge of microservices and Docker is helpful.
+*   **Software:**
+    *   **Java Development Kit (JDK) 21**
+    *   **Docker Desktop**
+    *   **IntelliJ IDEA Ultimate** (extended free trial available)
+    *   **AWS Command Line Interface (CLI) v2**
+    *   **LocalStack Desktop Application** (requires API key)
 
-Copy/paste this line into the environment variables when running the container in intellij
-```
-KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094;KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER;KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093;KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT;KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094;KAFKA_CFG_NODE_ID=0;KAFKA_CFG_PROCESS_ROLES=controller,broker
-```
+## Setup Instructions (Short Descriptions)
 
-## Kafka Producer Setup (Patient Service)
-
-Add the following to `application.properties`
-```
-spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
-spring.kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.ByteArrayDeserializer
-```
-
-
-# Notification Service
-
----
-
-## Environment Vars
-
-```
-SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-```
-
-## Protobuf/Kafka 
-
-Dependencies (add in addition to whats there)
-
-```
-<dependency>
-    <groupId>org.springframework.kafka</groupId>
-    <artifactId>spring-kafka</artifactId>
-    <version>3.3.0</version>
-</dependency>
-
-<dependency>
-    <groupId>com.google.protobuf</groupId>
-    <artifactId>protobuf-java</artifactId>
-    <version>4.29.1</version>
-</dependency>
-```
-
-Update the build section in pom.xml with the following
-
-```
-    <build>
-        <extensions>
-            <!-- Ensure OS compatibility for protoc -->
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.7.0</version>
-            </extension>
-        </extensions>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.6.1</version>
-                <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:3.25.5:exe:${os.detected.classifier}</protocArtifact>
-                    <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.68.1:exe:${os.detected.classifier}</pluginArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>compile-custom</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-```
-
-
-# Auth service
-
-Dependencies (add in addition to whats there)
-
-```
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>0.12.6</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>0.12.6</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.6</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.6.0</version>
-        </dependency>
-        <dependency>
-          <groupId>com.h2database</groupId>
-          <artifactId>h2</artifactId>
-        </dependency>
-       
-```
-
-## Environment Variables
-
-```
-SPRING_DATASOURCE_PASSWORD=password
-SPRING_DATASOURCE_URL=jdbc:postgresql://auth-service-db:5432/db
-SPRING_DATASOURCE_USERNAME=admin_user
-SPRING_JPA_HIBERNATE_DDL_AUTO=update
-SPRING_SQL_INIT_MODE=always
-```
-
-
-## Data.sql
-
-```sql
--- Ensure the 'users' table exists
-CREATE TABLE IF NOT EXISTS "users" (
-    id UUID PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL
-);
-
--- Insert the user if no existing user with the same id or email exists
-INSERT INTO "users" (id, email, password, role)
-SELECT '223e4567-e89b-12d3-a456-426614174006', 'testuser@test.com',
-       '$2b$12$7hoRZfJrRKD2nIm2vHLs7OBETy.LWenXXMLKf99W8M4PUwO6KB7fu', 'ADMIN'
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM "users"
-    WHERE id = '223e4567-e89b-12d3-a456-426614174006'
-       OR email = 'testuser@test.com'
-);
-
-
-
-```
-
-
-# Auth Service DB
-
-## Environment Variables
-
-```
-POSTGRES_DB=db;POSTGRES_PASSWORD=password;POSTGRES_USER=admin_user
-```
+1.  **Install Prerequisites:** Ensure JDK 21, Docker Desktop, IntelliJ IDEA Ultimate, AWS CLI, and LocalStack Desktop are installed and configured.
+2.  **Clone Project:** Obtain the project code from GitHub.
+3.  **Local Development (Docker & PostgreSQL):** Run microservices in Docker containers, utilising PostgreSQL databases for persistence. Configure inter-service communication via REST, gRPC, and Kafka.
+4.  **Kafka Topic Creation:** Use IntelliJ Kafka tools to create the `patient` topic for event streaming .
+5.  **Deployment (LocalStack IaC):** Define AWS infrastructure using AWS CDK in Java within the `infrastructure` module. Build Docker images for microservices. Deploy the CloudFormation stack to LocalStack using the provided `localstack-deploy.sh` script.
+6.  **Testing:** Use IntelliJ's built-in HTTP client for manual API testing. Run automated integration tests via the `integration-tests` module.
